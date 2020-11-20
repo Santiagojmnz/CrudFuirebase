@@ -12,13 +12,14 @@ import Footer from './components/footer/Footer';
 import Products from './components/contents/products/Products'
 import Customers from './components/contents/customers/Customers'
 
+
 function App() {
 
 
   return (
    
 
-      <div className="wrapper">
+    <>
 
 
         <Header />
@@ -34,7 +35,7 @@ function App() {
         <Footer />
 
 
-      </div>
+      </>
 
     
   );
