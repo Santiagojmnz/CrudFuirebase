@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { rutaAPI } from '../../config/Config'
+import logo from '../../img/Anuncio DarkCode.jpg';
+
 import $ from "jquery";
 
 
@@ -26,25 +27,7 @@ export default function Login() {
 
     }
 
-    //Envio de informacion
-    const login = async e => {
-        $(".alert").remove();
-        e.preventDefault();
-        const result = await loginAPI(admins);
 
-        
-
-        if (result.status != 200) {
-            $("button[type='submit']").before(`<div class="alert alert-danger">${result.message}</div>`)
-
-        } else {
-            localStorage.setItem("TOKEN", result.token);
-            localStorage.setItem("ID", result.user._id);
-            localStorage.setItem("USER", result.user.role);
-            localStorage.setItem("NAME", result.user.name);
-            window.location.href = "/";
-        }
-    }
 
 
 
@@ -56,22 +39,22 @@ export default function Login() {
 
             <div className="login-box" >
 
-                <div className="login-logo" >
+         
 
-                    <b> Vicky </b>
+                <div className="login-card-body" >
+                <div className="login-logo mt-n5 mb-5 " >
 
-                </div>
+<img className="mx-auto rounded-circle position-relative mt-n5" src={logo} alt="" width="120" height="120" />
 
-                <div className="card" >
+</div>
+                   
 
-                    <div className="card-body login-card-body" >
+                    <div className="card-body login-card-body mb-4" >
+                        
 
-                        <p className="login-box-msg">iniciar sesión</p>
+                        <form>
 
-                        <form onChange={cambiaForm}
-                            onSubmit={login} >
-
-                            <div className="input-group mb-3" >
+                            <div className="input-group mb-3  " >
 
                                 <input type="email"
                                     className="form-control"
@@ -119,27 +102,3 @@ export default function Login() {
 }
 
 // Peticion post login
-const loginAPI = data => {
-    const url = `${rutaAPI}/login`;
-    const params = {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }
-
-    return fetch(url, params).then(response => {
-
-        return response.json();
-    }).then(result => {
-        return result;
-    }
-
-
-    ).catch(error => {
-
-        return error;
-    })
-
-}

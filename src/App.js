@@ -8,10 +8,9 @@ import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 
 //Componentes dinamicos
-
+import Login from './components/login/Login';
 import Products from './components/contents/products/Products'
 import Customers from './components/contents/customers/Customers'
-
 
 function App() {
 
@@ -19,7 +18,7 @@ function App() {
   return (
    
 
-    <>
+      <div className="wrapper">
 
 
         <Header />
@@ -29,13 +28,14 @@ function App() {
           <Switch>
             <Route exact path="/clientes" component={Customers} />
             <Route exact path="/" component={Products} />
+            <Route exact path="/Login" component={Login} />
           </Switch>
         </BrowserRouter>
 
         <Footer />
 
 
-      </>
+      </div>
 
     
   );
