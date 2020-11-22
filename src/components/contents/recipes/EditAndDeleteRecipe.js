@@ -3,17 +3,17 @@ import $, { data } from 'jquery';
 import Swal from 'sweetalert2';
 import { db, storage } from '../../../config/Firebase';
 
-export default function EditAndDeleteProduct() {
+export default function EditAndDeleteRecipe() {
     //Hook para capturar datos
     const [id, setId] = useState('');
-    const [product, editProduct] = useState({
+    const [recipe, editRecipe] = useState({
 
         name: "",
-        price: "",
-        sku: "",
-        description: "",
-        stock: "",
+        category: "",
+        ingredients: "",
+        preparation: "",
         image: "",
+        id:""
 
     });
 
@@ -25,13 +25,12 @@ export default function EditAndDeleteProduct() {
         var file = $("#editImage").get(0).files[0];
         if (!$("#editImage").val()) {
 
-            editProduct({
+            editRecipe({
                 'name': $("#editName").val(),
-                'price': $("#editPrice").val(),
-                'sku': $("#editSku").val(),
-                'description': $("#editDescription").val(),
-                'stock': $("#editStock").val(),
-                'image': $("#productImage").val()
+                'category': $("#editcategory").val(),
+                'ingredients': $("#editingredients").val(),
+                'preparation': $("#editpreparation").val(),
+                'image': $("#recipeImage").val()
 
 
             })
@@ -46,7 +45,7 @@ export default function EditAndDeleteProduct() {
     function uploadImage(file) {
 
         //dynamically set reference to the file name
-        var ImageRef = storage.ref('ImageProducts').child(file.name);
+        var ImageRef = storage.ref('ImageRecipes').child(file.name);
        //put request upload file to firebase storage
         ImageRef.put(file).then(function (snapshot) {
                 imageUrl(ImageRef)
@@ -57,12 +56,11 @@ export default function EditAndDeleteProduct() {
     function imageUrl(ImageRef) {
         ImageRef.getDownloadURL().then(function (url) {
 
-            editProduct({
+            editRecipe({
                 'name': $("#editName").val(),
-                'price': $("#editPrice").val(),
-                'sku': $("#editSku").val(),
-                'description': $("#editDescription").val(),
-                'stock': $("#editStock").val(),
+                'category': $("#editcategory").val(),
+                'ingredients': $("#editingredients").val(),
+                'preparation': $("#editpreparation").val(),
                 'image': url,
 
 
@@ -82,7 +80,7 @@ export default function EditAndDeleteProduct() {
 
 
 
-        const { name, price, sku, description, stock } = product;
+        const { name, category, ingredients, preparation} = recipe;
 
         //Validar campos 
         if (name === "") {
@@ -93,36 +91,30 @@ export default function EditAndDeleteProduct() {
             return;
 
         }
-        if (price === "") {
+        if (category === "") {
 
-            $(".invalid-price").show();
-            $(".invalid-price").html("Completa este campo");
+            $(".invalid-category").show();
+            $(".invalid-category").html("Completa este campo");
             return;
         }
-        if (sku === "") {
+        if (ingredients === "") {
 
-            $(".invalid-sku").show();
-            $(".invalid-sku").html("Completa este campo");
-            return;
-        }
-
-
-
-        if (description === "") {
-
-            $(".invalid-description").show();
-            $(".invalid-description").html("Completa este campo");
-            return;
-        }
-        if (stock === "") {
-
-            $(".invalid-stock").show();
-            $(".invalid-stock").html("Completa este campo");
+            $(".invalid-ingredients").show();
+            $(".invalid-ingredients").html("Completa este campo");
             return;
         }
 
-        $(".modal-footer").before(`<div class="alert alert-success">Producto Actualizado</div>`)
-        db.collection('Products').doc(id).set(product);
+
+
+        if (preparation === "") {
+
+            $(".invalid-preparation").show();
+            $(".invalid-preparation").html("Completa este campo");
+            return;
+        }
+        
+        $(".modal-footer").before(`<div class="alert alert-success">Receta Actualizada</div>`)
+        db.collection('Recipes').doc(id).set(recipe);
         $('button[type="submit"]').remove();
 
         setTimeout(() => { window.location.href = "/"; }, 1000)
@@ -138,12 +130,12 @@ export default function EditAndDeleteProduct() {
         const data = $(this).attr("data").split(',');
         setId(data[0]);
        
-        $("#productImage").val(data[6]);
+        $("#recipeImage").val(data[6]);
         $("#editName").val(data[1]);
-        $("#editPrice").val(data[2]);
-        $("#editSku").val(data[3]);
-        $("#editDescription").val(data[4]);
-        $("#editStock").val(data[5]);
+        $("#editcategory").val(data[2]);
+        $("#editingredients").val(data[3]);
+        $("#editpreparation").val(data[4]);
+       
 
 
 
@@ -159,7 +151,7 @@ export default function EditAndDeleteProduct() {
         //Confirmar accion
 
         Swal.fire({
-            title: 'Eliminar producto',
+            title: 'Eliminar receta',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#008000',
@@ -169,15 +161,15 @@ export default function EditAndDeleteProduct() {
             if (result.value) {
 
                 //servicio Delete
-                const ProductDelete = async () => {
-
-                    db.collection('Products').doc(data[0]).delete();
+                const RecipeDelete = async () => {
+                    console.log(data);
+                    db.collection('Recipes').doc(data[0]).delete();
 
                     if (data) {
 
                         Swal.fire({
                             type: "success",
-                            title: "Producto eliminado correctamente",
+                            title: "Receta eliminada correctamente",
                             showConfirmButton: true,
                             confirmButtonText: "Cerrar"
 
@@ -195,7 +187,7 @@ export default function EditAndDeleteProduct() {
                     if (!data) {
                         Swal.fire({
                             type: "error",
-                            title: "Producto No encontrado",
+                            title: "Receta no encontrada",
                             showConfirmButton: true,
                             confirmButtonText: "Cerrar"
 
@@ -214,7 +206,7 @@ export default function EditAndDeleteProduct() {
 
 
                 }
-                ProductDelete();
+                RecipeDelete();
 
             }
 
@@ -233,12 +225,12 @@ export default function EditAndDeleteProduct() {
     //Vista de formulario
     return (
 
-        <div className="modal  " id="editProduct" >
+        <div className="modal  " id="editRecipe" >
             <div className="modal-dialog">
                 <div className="modal-content ">
 
                     <div className="modal-header mb-0">
-                        <h4 className="modal-title">Editar Producto</h4>
+                        <h4 className="modal-title">Editar Receta</h4>
                         <button type="button" className="close" data-dismiss="modal">&times;</button>
                     </div>
 
@@ -246,7 +238,7 @@ export default function EditAndDeleteProduct() {
                     <form onChange={handleChange} onSubmit={handleSubmit} encType="multipart/form-data"  >
 
                         <div className="modal-body row">
-                            <input type="hidden" id="productImage" />
+                            <input type="hidden" id="recipeImage" />
 
                             <div className="form-group col-md-12 mb-0">
 
@@ -272,55 +264,55 @@ export default function EditAndDeleteProduct() {
 
                             <div className="form-group col-md-6 mb-0">
 
-                                <label className="small text-secondary" htmlFor="editPrice">Precio</label>
+                                <label className="small text-secondary" htmlFor="editcategory">Categoria</label>
 
                                 <div className="input-group  mb-3">
 
                                     <input
-                                        id="editPrice"
-                                        type="number"
-                                        name="price"
+                                        id="editcategory"
+                                        type="text"
+                                        name="category"
                                         className="form-control"
                                         placeholder="Precio*"
                                         required
 
                                     />
-                                    <div className="invalid-feedback invalid-price"></div>
+                                    <div className="invalid-feedback invalid-category"></div>
 
                                 </div>
 
                             </div>
                             <div className="form-group col-md-6 mb-0">
 
-                                <label className="small text-secondary" htmlFor="editSku">Sku</label>
+                                <label className="small text-secondary" htmlFor="editingredients">Ingredientes</label>
 
                                 <div className="input-group mb-3">
 
                                     <input
-                                        id="editSku"
-                                        name="sku"
-                                        type="number"
+                                        id="editingredients"
+                                        name="ingredients"
+                                        type="text"
                                         className="form-control"
-                                        placeholder="Sku*"
+                                        placeholder="ingredients*"
                                         required
 
                                     />
 
-                                    <div className="invalid-feedback invalid-sku"></div>
+                                    <div className="invalid-feedback invalid-ingredients"></div>
 
                                 </div>
 
                             </div>
                             <div className="form-group col-md-12 mb-0">
 
-                                <label className="small text-secondary" htmlFor="editDescription">Descripcion</label>
+                                <label className="small text-secondary" htmlFor="editpreparation">Descripcion</label>
 
                                 <div className=" mb-3">
 
 
                                     <textarea
-                                        id="editDescription"
-                                        name="description"
+                                        id="editpreparation"
+                                        name="preparation"
                                         type="text"
                                         className="form-control"
                                         placeholder="Descripcion*"
@@ -330,32 +322,12 @@ export default function EditAndDeleteProduct() {
                                     />
 
 
-                                    <div className="invalid-feedback invalid-description"></div>
+                                    <div className="invalid-feedback invalid-preparation"></div>
 
                                 </div>
 
                             </div>
-                            <div className="form-group col-md-12 mb-0 ">
-
-                                <label className="small text-secondary" htmlFor="editStock">Cantidad</label>
-
-                                <div className="input mb-3">
-
-                                    <input
-                                        id="editStock"
-                                        name="stock"
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="Cantidad*"
-                                        required
-
-                                    />
-
-                                    <div className="invalid-feedback invalid-stock"></div>
-
-                                </div>
-
-                            </div>
+                            
                             <div className="form-group col-md-12 mb-0">
 
                                 <label className="small text-secondary" >Imagen</label>

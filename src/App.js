@@ -9,7 +9,7 @@ import Footer from './components/footer/Footer';
 
 //Componentes dinamicos
 import Login from './components/login/Login';
-import Products from './components/contents/products/Products'
+import Products from './components/contents/recipes/Recipes'
 import Customers from './components/contents/customers/Customers'
 
 function App() {

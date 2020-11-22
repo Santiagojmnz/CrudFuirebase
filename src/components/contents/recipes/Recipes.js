@@ -4,24 +4,24 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-responsive';
 import { db } from '../../../config/Firebase';
-import CreateProduct from './CreateProduct';
-import EditAndDeleteProduct from './EditAndDeleteProduct';
+import CreateProduct from './CreateRecipe';
+import EditAndDeleteProduct from './EditAndDeleteRecipe';
 
-export default function Products() {
-	const productsData = async () => {
+export default function Recipes() {
+	const recipesData = async () => {
 		//creamos el dataset
-		const getProducts = await db.collection('Products').get();
+		const getRecipes = await db.collection('Recipes').get();
 		
 
 		const Data = [];
-		getProducts.forEach((product) => {
-			Data.push({...product.data(), id:product.id});
+		getRecipes.forEach((recipe) => {
+			Data.push({...recipe.data(), id:recipe.id});
 
 		})
 		const dataSet=[]
-		Data.forEach((product,index)=>{
-			dataSet[index]=[(index+1),product.image,product.name, product.price,product.sku,product.description, product.stock,
-				[product.id,product.name, product.price,product.sku,product.description, product.stock,product.image]]
+		Data.forEach((recipe,index)=>{
+			dataSet[index]=[(index+1),recipe.image,recipe.name, recipe.category,recipe.ingredients,recipe.preparation,
+				[recipe.id,recipe.name, recipe.category,recipe.ingredients,recipe.preparation,recipe.image]]
 			
 		
 		})
@@ -54,7 +54,7 @@ export default function Products() {
 
 							return `
 					  
-							<a href="" class="editInputs" data-toggle="modal" data-target="#editProduct" data='${data}'>
+							<a href="" class="editInputs" data-toggle="modal" data-target="#editRecipe" data='${data}'>
 
 							<button type="button" class="btn btn-primary btn-sm">Editar</button>
 	  
@@ -102,7 +102,7 @@ export default function Products() {
 
 
 	}
-	productsData();
+	recipesData();
 
 	//SE RETORNA VISTA DEL COMPONENTE
 	return (
@@ -117,7 +117,7 @@ export default function Products() {
 
 						<div className="col-sm-6">
 
-							<h1 className="m-0 text-dark">Productos</h1>
+							<h1 className="m-0 text-dark">Recetas</h1>
 
 						</div>
 
@@ -141,7 +141,7 @@ export default function Products() {
 
 									<h5 className="m-0">
 
-										<button className="btn btn-primary" data-toggle="modal" data-target="#createProduct">Nevo Producto</button>
+										<button className="btn btn-primary" data-toggle="modal" data-target="#createRecipe">Nueva Receta</button>
 
 									</h5>
 
