@@ -4,58 +4,55 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-responsive';
 import { db } from '../../../config/Firebase';
-import CreateCustomer from './CreateCustomer';
-import EditAndDeleteCustomer from './EditAndDeleteCustomer';
 
 
-export default function Customers() {
-	const customersData = async () => {
+
+export default function Users() {
+	const usersData = async () => {
 		//creamos el dataset
-		const getCustomers = await db.collection('Customers').get();
+		//creamos el dataset
+		const getUsers = await db.collection('Users').get();
 		
 
 		const Data = [];
-		getCustomers.forEach((customer) => {
-			Data.push({...customer.data(), id:customer.id});
+		getUsers.forEach((user) => {
+			Data.push({...user.data(), id:user.id});
 
 		})
-		const dataSet=[]
-		Data.forEach((customer,index)=>{
-			dataSet[index]=[(index+1),customer.name, customer.lastname,customer.email,customer.bussines, customer.phone,
-				[customer.id,customer.name, customer.lastname,customer.email,customer.bussines, customer.phone]]
-			
-		
+
+		const dataSet = [];
+		Data.forEach((user, index) => {
+			dataSet[index] = [(index + 1), user.name, user.surname, user.email, [user.name, user.surname, user.email, user._id]]
+
 		})
-    	
-		
 		//SE ejecuta dataTable
+
+
+
+
 		$(document).ready(function () {
 			$('.table').DataTable({
-				
 				data: dataSet,
 				columns: [
 					{ title: "#" },
 					{ title: "Nombre" },
-					{ title: "Apellidos" },
+					{ title: "Apellido" },
 					{ title: "Email" },
-					{ title: "Empresa" },
-					{ title: "Telefono" },
 					{
 						title: "Editar/Eliminar",
 						render: function (data) {
-							
 
 							return `
 					  
-							<a href="" class="editInputs" data-toggle="modal" data-target="#editCustomer" data='${data}'>
+							<a href="" class="editInputs" data-toggle="modal" data-target="#editUser" data='${data}'>
 
 							<button type="button" class="btn btn-primary btn-sm">Editar</button>
 	  
 							</a>
 	  
 							<a href="" class="delete" data='${data}'>
-								
-							<button type="button" class="btn btn-danger btn-sm">Eliminar</button>
+						  
+							<button  class="btn btn-danger btn-sm">Eliminar</button>
 							</a>`
 
 						}
@@ -95,7 +92,7 @@ export default function Customers() {
 
 
 	}
-	customersData();
+	usersData();
 
 	//SE RETORNA VISTA DEL COMPONENTE
 	return (
@@ -110,7 +107,7 @@ export default function Customers() {
 
 						<div className="col-sm-6">
 
-							<h1 className="m-0 text-dark">Clientes</h1>
+							<h1 className="m-0 text-dark">Usuarios</h1>
 
 						</div>
 
@@ -129,16 +126,6 @@ export default function Customers() {
 						<div className="col-lg-12">
 
 							<div className="card card-primary card-outline">
-
-								<div className="card-header">
-
-									<h5 className="m-0">
-
-										<button className="btn btn-primary" data-toggle="modal" data-target="#createCustomer">Nuevo Cliente</button>
-
-									</h5>
-
-								</div>
 
 								<div className="card-body">
 
@@ -160,15 +147,12 @@ export default function Customers() {
 				</div>
 
 			</div>
-        <CreateCustomer/>
-        <EditAndDeleteCustomer/>
 
-
+		
 
 		</div>
 
 	)
 
 }
-
-// getcustomers
+// getUsers

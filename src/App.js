@@ -6,11 +6,13 @@ import jwtDecode from 'jwt-decode';
 
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
+import Navbar from './components/navbar/Navbar';
 
 //Componentes dinamicos
 import Login from './components/login/Login';
 import Products from './components/contents/recipes/Recipes'
-import Customers from './components/contents/customers/Customers'
+import Users from './components/contents/users/Users'
+import Error404 from './components/contents/error404/Error404';
 
 function App() {
 
@@ -18,24 +20,26 @@ function App() {
   return (
    
 
-      <div className="wrapper">
-
-
+      <>
+        
+        <Navbar/>
         <Header />
+       
         
 
         <BrowserRouter>
           <Switch>
-            <Route exact path="/clientes" component={Customers} />
-            <Route exact path="/" component={Products} />
+            <Route exact path="/Usuarios" component={Users} />
+            <Route exact path="/Productos" component={Products} />
             <Route exact path="/Login" component={Login} />
+            <Route component={Error404} />
           </Switch>
         </BrowserRouter>
 
         <Footer />
 
 
-      </div>
+      </>
 
     
   );

@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
 import $ from 'jquery';
-import {db} from '../../../config/Firebase';
+import { db, storage } from '../../../config/Firebase';
 
 export default function CreateRecipe() {
 
     //Hoks para capturar datos
+    const [url, setUrl] = useState();
 
     const [recipe, createRecipe] = useState({
 
@@ -14,35 +15,61 @@ export default function CreateRecipe() {
         ingredients: "",
         preparation: "",
         image: "",
-        id:""
+        id: ""
 
     });
 
     //ONchange
-    
+
     const cambiaFormPut = e => {
-       
-          createRecipe({
+        if ($("#image").val()) {
+            uploadImage();
+        }
 
 
-            'name': $("#name").val(),
-            'category': $("#category").val(),
-            'ingredients': $("#ingredients").val(),
-            'preparation': $("#preparation").val(),
-            'image':  $("#image").val(),
-           
-
-        })
     }
+    
+    
+    function uploadImage() {
+        var file = $("#image").get(0).files[0];
+        
+        //dynamically set reference to the file name
+        var ImageRef = storage.ref('ImageRecipes').child(file.name);
+        //put request upload file to firebase storage
+        ImageRef.put(file).then(function (snapshot) {
+            imageUrl(ImageRef)
+        });
+
+
+    }
+
+    function imageUrl(ImageRef) {
+        ImageRef.getDownloadURL().then(function (url) {
+            createRecipe({
+                'name': $("#name").val(),
+                'category': $("#category").val(),
+                'ingredients': $("#ingredients").val(),
+                'preparation': $("#preparation").val(),
+                'image':url
+
+
+            })
+            
+        }).catch(function (error) {
+        });
+    }
+
+
+
     const submitPut = async e => {
 
         $('.alert').remove();
 
         e.preventDefault();
 
-        const { name, category, ingredients, preparation,image} = recipe;
-        
-        
+        const { name, category, ingredients, preparation, image} = recipe;
+
+
         //Validar campos 
         if (name === "") {
 
@@ -73,21 +100,21 @@ export default function CreateRecipe() {
             $(".invalid-preparation").html("Completa este campo");
             return;
         }
-        
+
         if (image === "") {
 
             $(".invalid-image").show();
             $(".invalid-image").html("Completa este campo");
             return;
         }
-         db.collection('Recipes').doc().set(recipe);
-            $(".modal-footer").before(`<div class="alert alert-success">Receta guardada</div>`)     
-      
-         $('button[type="submit"]').remove();
-          
-          setTimeout(() => { window.location.href = "/"; }, 1000)
+        db.collection('Recipes').doc().set(recipe);
+        $(".modal-footer").before(`<div class="alert alert-success">Receta guardada</div>`)
+
+        $('button[type="submit"]').remove();
+
+        setTimeout(() => { window.location.href = "/"; }, 1000)
     }
-    
+
 
 
 
@@ -107,7 +134,7 @@ export default function CreateRecipe() {
                     </div>
 
 
-                    <form  onChange={cambiaFormPut} onSubmit={submitPut}  >
+                    <form onChange={cambiaFormPut} onSubmit={submitPut}  >
 
                         <div className="modal-body row">
 
@@ -198,7 +225,7 @@ export default function CreateRecipe() {
                                 </div>
 
                             </div>
-                           
+
                             <div className="form-group col-md-12 mb-0">
 
                                 <label className="small text-secondary" htmlFor="image">Imagen</label>
@@ -206,7 +233,7 @@ export default function CreateRecipe() {
                                 <div className="input mb-3">
 
                                     <input
-                                        type="text"
+                                        type="file"
                                         name="image"
                                         id="image"
                                         className="form-control-file border"

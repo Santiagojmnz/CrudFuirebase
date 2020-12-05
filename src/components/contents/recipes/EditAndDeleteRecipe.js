@@ -129,8 +129,8 @@ export default function EditAndDeleteRecipe() {
         e.preventDefault();
         const data = $(this).attr("data").split(',');
         setId(data[0]);
-       
-        $("#recipeImage").val(data[6]);
+               
+        $("#recipeImage").val(data[5]);
         $("#editName").val(data[1]);
         $("#editcategory").val(data[2]);
         $("#editingredients").val(data[3]);

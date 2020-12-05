@@ -26,7 +26,7 @@ export default function Recipes() {
 		
 		})
 				
-		
+		console.log(dataSet);
 		//SE ejecuta dataTable
 		$(document).ready(function () {
 			$('.table').DataTable({
