@@ -6,7 +6,7 @@ import { db, auth } from '../../config/Firebase';
 export default function CreateUser() {
 
     //Captura de datos
-const [error,setError] = useState();
+    const [error, setError] = useState();
     const [user, createUser] = useState({
 
         name: "",
@@ -98,30 +98,29 @@ const [error,setError] = useState();
 
         }
 
-      
+
         auth.createUserWithEmailAndPassword(email, password)
-            .then(function (user) {
-                
-               
+            .then(function(user) {
+
                 console.log('Usuario registrado');
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 // Handle Errors here.
-                var error =error.code;
-          
+                var error = error.code;
+
             });
 
-            if(error==400){
-                $(".modal-footer").before(`<div class="alert alert-success">Usuario existente</div>`)
-            }else{
-                $('button[type="submit"]').remove();
-                db.collection('Users').doc().set(user);
-                $(".modal-footer").before(`<div class="alert alert-success">Usuario registrado</div>`)
-        
-        
-            }
+        if (error == 400) {
+            $(".modal-footer").before(`<div class="alert alert-success">Usuario existente</div>`)
+        } else {
+            $('button[type="submit"]').remove();
+            db.collection('Users').doc().set(user);
+            $(".modal-footer").before(`<div class="alert alert-success">Usuario registrado</div>`)
 
-       
+
+        }
+
+
         //setTimeout(() => { window.location.href = "/"; }, 1000)
 
         // }
@@ -132,137 +131,190 @@ const [error,setError] = useState();
 
     return (
 
-        <div className="modal" id="registerUser">
-            <div className="modal-dialog">
-                <div className="modal-content">
+        <
+        div className = "modal"
+        id = "registerUser" >
+        <
+        div className = "modal-dialog" >
+        <
+        div className = "modal-content" >
 
-                    <div className="modal-header">
-                        <h4 className="modal-title">Crear cuenta</h4>
-                        <button type="button" className="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-
-                    <form onChange={handleChange} onSubmit={submitPost}>
-
-                        <div className="modal-body">
-
-                            <div className="form-group">
-
-                                <label className="small text-secondary" htmlFor="Nombre">Nombre</label>
-
-                                <div className="input-group mb-3">
-
-                                    <input
-                                        id="Nombre"
-                                        name="name"
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Nombre*"
-                                        required
-
-                                    />
-
-                                    <div className="invalid-feedback invalid-name"></div>
-
-                                </div>
-
-                            </div>
-
-                            <div className="form-group">
-
-                                <label className="small text-secondary" htmlFor="Apellidos">Apellidos</label>
-
-                                <div className="input-group mb-3">
-
-                                    <input
-                                        id="Apellidos"
-                                        type="text"
-                                        name="surname"
-                                        className="form-control"
-                                        placeholder="Apellidos*"
-                                        required
-
-                                    />
-                                    <div className="invalid-feedback invalid-surname"></div>
-
-                                </div>
-
-                            </div>
-                            <div className="form-group">
-
-                                <label className="small text-secondary" htmlFor="email">Correo Electronico</label>
-
-                                <div className="input-group mb-3">
-                                    <div className="input-group-append input-group-text">
-                                        <i className="fa fa-envelope "></i>
-                                    </div>
-
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        name="email"
-                                        className="form-control text-tolowercase"
-                                        placeholder="Correo electronico*"
-                                        pattern="[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}"
-                                        required
-
-                                    />
-                                    <div className="invalid-feedback invalid-email"></div>
-
-                                </div>
-
-                            </div>
+        <
+        div className = "modal-header" >
+        <
+        h4 className = "modal-title" > Crear cuenta < /h4> <
+        button type = "button"
+        className = "close"
+        data - dismiss = "modal" > & times; < /button> <
+        /div>
 
 
+        <
+        form onChange = { handleChange }
+        onSubmit = { submitPost } >
 
-                            <div className="form-group">
+        <
+        div className = "modal-body" >
 
-                                <label className="small text-secondary" htmlFor="password">* Mínimo 8 caracteres, letras en mayúscula, en minúscula y números</label>
+        <
+        div className = "form-group" >
 
-                                <div className="input-group mb-3">
+        <
+        label className = "small text-secondary"
+        htmlFor = "Nombre" > Nombre < /label>
 
-                                    <div className="input-group-append input-group-text">
-                                        <i className="fas fa-key"></i>
-                                    </div>
+        <
+        div className = "input-group mb-3" >
 
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        className="form-control"
-                                        name="password"
-                                        placeholder="Contraseña*"
-                                        minLength="8"
-                                        pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}"
-                                        required
+        <
+        input id = "Nombre"
+        name = "name"
+        type = "text"
+        className = "form-control"
+        placeholder = "Nombre*"
+        required
 
-                                    />
+        /
+        >
 
-                                    <div className="invalid-feedback invalid-password"></div>
+        <
+        div className = "invalid-feedback invalid-name" > < /div>
 
-                                </div>
+        <
+        /div>
 
-                            </div>
+        <
+        /div>
 
-                        </div>
+        <
+        div className = "form-group" >
+
+        <
+        label className = "small text-secondary"
+        htmlFor = "Apellidos" > Apellidos < /label>
+
+        <
+        div className = "input-group mb-3" >
+
+        <
+        input id = "Apellidos"
+        type = "text"
+        name = "surname"
+        className = "form-control"
+        placeholder = "Apellidos*"
+        required
+
+        /
+        >
+        <
+        div className = "invalid-feedback invalid-surname" > < /div>
+
+        <
+        /div>
+
+        <
+        /div> <
+        div className = "form-group" >
+
+        <
+        label className = "small text-secondary"
+        htmlFor = "email" > Correo Electronico < /label>
+
+        <
+        div className = "input-group mb-3" >
+        <
+        div className = "input-group-append input-group-text" >
+        <
+        i className = "fa fa-envelope " > < /i> <
+        /div>
+
+        <
+        input id = "email"
+        type = "email"
+        name = "email"
+        className = "form-control text-tolowercase"
+        placeholder = "Correo electronico*"
+        pattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}"
+        required
+
+        /
+        >
+        <
+        div className = "invalid-feedback invalid-email" > < /div>
+
+        <
+        /div>
+
+        <
+        /div>
 
 
-                        <div className="modal-footer d-flex justify-content-between">
 
-                            <div><button type="button" className="btn btn-danger " data-dismiss="modal">Cerrar</button></div>
+        <
+        div className = "form-group" >
 
-                            <div><button type="submit" className="btn btn-success">Registrarme</button></div>
+        <
+        label className = "small text-secondary"
+        htmlFor = "password" > * Mínimo 8 caracteres, letras en mayúscula, en minúscula y números < /label>
 
-                        </div>
+        <
+        div className = "input-group mb-3" >
 
-                    </form>
+        <
+        div className = "input-group-append input-group-text" >
+        <
+        i className = "fas fa-key" > < /i> <
+        /div>
 
-                </div>
-            </div>
-        </div>
+        <
+        input id = "password"
+        type = "password"
+        className = "form-control"
+        name = "password"
+        placeholder = "Contraseña*"
+        minLength = "8"
+        pattern = "(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}"
+        required
+
+        /
+        >
+
+        <
+        div className = "invalid-feedback invalid-password" > < /div>
+
+        <
+        /div>
+
+        <
+        /div>
+
+        <
+        /div>
+
+
+        <
+        div className = "modal-footer d-flex justify-content-between" >
+
+        <
+        div > < button type = "button"
+        className = "btn btn-danger "
+        data - dismiss = "modal" > Cerrar < /button></div >
+
+        <
+        div > < button type = "submit"
+        className = "btn btn-success" > Registrarme < /button></div >
+
+        <
+        /div>
+
+        <
+        /form>
+
+        <
+        /div> <
+        /div> <
+        /div>
 
     )
 
 }
-
-
-
