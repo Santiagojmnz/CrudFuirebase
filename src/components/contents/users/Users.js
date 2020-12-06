@@ -4,65 +4,55 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-responsive';
 import { db } from '../../../config/Firebase';
-import CreateProduct from './CreateProduct';
-import EditAndDeleteProduct from './EditAndDeleteProduct';
 
-export default function Products() {
-	const productsData = async () => {
+
+
+export default function Users() {
+	const usersData = async () => {
 		//creamos el dataset
-		const getProducts = await db.collection('Products').get();
+		//creamos el dataset
+		const getUsers = await db.collection('Users').get();
 		
 
 		const Data = [];
-		getProducts.forEach((product) => {
-			Data.push({...product.data(), id:product.id});
+		getUsers.forEach((user) => {
+			Data.push({...user.data(), id:user.id});
 
 		})
-		const dataSet=[]
-		Data.forEach((product,index)=>{
-			dataSet[index]=[(index+1),product.image,product.name, product.price,product.sku,product.description, product.stock,
-				[product.id,product.name, product.price,product.sku,product.description, product.stock,product.image]]
-			
-		
+
+		const dataSet = [];
+		Data.forEach((user, index) => {
+			dataSet[index] = [(index + 1), user.name, user.surname, user.email, [user.name, user.surname, user.email, user._id]]
+
 		})
-				
-		
 		//SE ejecuta dataTable
+
+
+
+
 		$(document).ready(function () {
 			$('.table').DataTable({
-				
 				data: dataSet,
 				columns: [
 					{ title: "#" },
-					{
-						title: "Receta",
-						render: function(data){
-
-							return `<img src="${data}" style="width:120px">`
-					
-						}
-					},
 					{ title: "Nombre" },
-					{ title: "Categoria" },
-					{ title: "Ingredientes" },
-					{ title: "Preparacion" },
-					
+					{ title: "Apellido" },
+					{ title: "Email" },
 					{
 						title: "Editar/Eliminar",
 						render: function (data) {
-							
 
 							return `
 					  
-							<a href="" class="editInputs" data-toggle="modal" data-target="#editProduct" data='${data}'>
+							<a href="" class="editInputs" data-toggle="modal" data-target="#editUser" data='${data}'>
 
 							<button type="button" class="btn btn-primary btn-sm">Editar</button>
 	  
 							</a>
 	  
 							<a href="" class="delete" data='${data}'>
-								
-							<button type="button" class="btn btn-danger btn-sm">Eliminar</button>
+						  
+							<button  class="btn btn-danger btn-sm">Eliminar</button>
 							</a>`
 
 						}
@@ -102,7 +92,7 @@ export default function Products() {
 
 
 	}
-	productsData();
+	usersData();
 
 	//SE RETORNA VISTA DEL COMPONENTE
 	return (
@@ -117,7 +107,7 @@ export default function Products() {
 
 						<div className="col-sm-6">
 
-							<h1 className="m-0 text-dark">Productos</h1>
+							<h1 className="m-0 text-dark">Usuarios</h1>
 
 						</div>
 
@@ -136,16 +126,6 @@ export default function Products() {
 						<div className="col-lg-12">
 
 							<div className="card card-primary card-outline">
-
-								<div className="card-header">
-
-									<h5 className="m-0">
-
-										<button className="btn btn-primary" data-toggle="modal" data-target="#createProduct">Nevo Producto</button>
-
-									</h5>
-
-								</div>
 
 								<div className="card-body">
 
@@ -168,14 +148,11 @@ export default function Products() {
 
 			</div>
 
-
-<CreateProduct/>
-<EditAndDeleteProduct/>
+		
 
 		</div>
 
 	)
 
 }
-
-// getProducts
+// getUsers

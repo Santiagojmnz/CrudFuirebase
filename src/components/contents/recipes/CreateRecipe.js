@@ -1,50 +1,75 @@
 
 import React, { useState } from 'react';
 import $ from 'jquery';
-import {db} from '../../../config/Firebase';
+import { db, storage } from '../../../config/Firebase';
 
-export default function CreateProduct() {
+export default function CreateRecipe() {
 
     //Hoks para capturar datos
+    const [url, setUrl] = useState();
 
-    const [product, createProduct] = useState({
+    const [recipe, createRecipe] = useState({
 
         name: "",
-        price: "",
-        sku: "",
-        description: "",
-        stock: "",
+        category: "",
+        ingredients: "",
+        preparation: "",
         image: "",
-        id:""
+        id: ""
 
     });
 
     //ONchange
-    
+
     const cambiaFormPut = e => {
-       
-          createProduct({
+        if ($("#image").val()) {
+            uploadImage();
+        }
 
 
-            'name': $("#name").val(),
-            'price': $("#price").val(),
-            'sku': $("#sku").val(),
-            'description': $("#description").val(),
-            'stock': $("#stock").val(),
-            'image':  $("#image").val(),
-           
-
-        })
     }
+    
+    
+    function uploadImage() {
+        var file = $("#image").get(0).files[0];
+        
+        //dynamically set reference to the file name
+        var ImageRef = storage.ref('ImageRecipes').child(file.name);
+        //put request upload file to firebase storage
+        ImageRef.put(file).then(function (snapshot) {
+            imageUrl(ImageRef)
+        });
+
+
+    }
+
+    function imageUrl(ImageRef) {
+        ImageRef.getDownloadURL().then(function (url) {
+            createRecipe({
+                'name': $("#name").val(),
+                'category': $("#category").val(),
+                'ingredients': $("#ingredients").val(),
+                'preparation': $("#preparation").val(),
+                'image':url
+
+
+            })
+            
+        }).catch(function (error) {
+        });
+    }
+
+
+
     const submitPut = async e => {
 
         $('.alert').remove();
 
         e.preventDefault();
 
-        const { name, price, sku, description, stock, image} = product;
-        
-        
+        const { name, category, ingredients, preparation, image} = recipe;
+
+
         //Validar campos 
         if (name === "") {
 
@@ -54,47 +79,42 @@ export default function CreateProduct() {
             return;
 
         }
-        if (price === "") {
+        if (category === "") {
 
-            $(".invalid-price").show();
-            $(".invalid-price").html("Completa este campo");
+            $(".invalid-category").show();
+            $(".invalid-category").html("Completa este campo");
             return;
         }
-        if (sku === "") {
+        if (ingredients === "") {
 
-            $(".invalid-sku").show();
-            $(".invalid-sku").html("Completa este campo");
+            $(".invalid-ingredients").show();
+            $(".invalid-ingredients").html("Completa este campo");
             return;
         }
 
 
 
-        if (description === "") {
+        if (preparation === "") {
 
-            $(".invalid-description").show();
-            $(".invalid-description").html("Completa este campo");
+            $(".invalid-preparation").show();
+            $(".invalid-preparation").html("Completa este campo");
             return;
         }
-        if (stock === "") {
 
-            $(".invalid-stock").show();
-            $(".invalid-stock").html("Completa este campo");
-            return;
-        }
         if (image === "") {
 
             $(".invalid-image").show();
             $(".invalid-image").html("Completa este campo");
             return;
         }
-         db.collection('Products').doc().set(product);
-            $(".modal-footer").before(`<div class="alert alert-success">Producto Agregado</div>`)     
-      
-         $('button[type="submit"]').remove();
-          
-          setTimeout(() => { window.location.href = "/"; }, 1000)
+        db.collection('Recipes').doc().set(recipe);
+        $(".modal-footer").before(`<div class="alert alert-success">Receta guardada</div>`)
+
+        $('button[type="submit"]').remove();
+
+        setTimeout(() => { window.location.href = "/"; }, 1000)
     }
-    
+
 
 
 
@@ -104,17 +124,17 @@ export default function CreateProduct() {
 
     return (
 
-        <div className="modal  " id="createProduct" >
+        <div className="modal  " id="createRecipe" >
             <div className="modal-dialog">
                 <div className="modal-content ">
 
                     <div className="modal-header mb-0">
-                        <h4 className="modal-title">Nuevo Producto</h4>
+                        <h4 className="modal-title">Nueva Receta</h4>
                         <button type="button" className="close" data-dismiss="modal">&times;</button>
                     </div>
 
 
-                    <form  onChange={cambiaFormPut} onSubmit={submitPut}  >
+                    <form onChange={cambiaFormPut} onSubmit={submitPut}  >
 
                         <div className="modal-body row">
 
@@ -140,38 +160,38 @@ export default function CreateProduct() {
 
                             </div>
 
-                            <div className="form-group col-md-6 mb-0">
+                            <div className="form-group col-md-12 mb-0">
 
-                                <label className="small text-secondary" htmlFor="Apellidos">Precio</label>
+                                <label className="small text-secondary" htmlFor="Apellidos">Categoria</label>
 
                                 <div className="input-group  mb-3">
 
                                     <input
-                                        id="price"
-                                        type="number"
-                                        name="price"
+                                        id="category"
+                                        type="text"
+                                        name="category"
                                         className="form-control"
-                                        placeholder="Precio*"
+                                        placeholder="Categoria*"
                                         required
 
                                     />
-                                    <div className="invalid-feedback invalid-price"></div>
+                                    <div className="invalid-feedback invalid-category"></div>
 
                                 </div>
 
                             </div>
-                            <div className="form-group col-md-6 mb-0">
+                            <div className="form-group col-md-12 mb-0">
 
-                                <label className="small text-secondary" htmlFor="Nombre">Sku</label>
+                                <label className="small text-secondary" htmlFor="Nombre">Ingredientes</label>
 
                                 <div className="input-group mb-3">
 
-                                    <input
-                                        id="sku"
-                                        name="sku"
-                                        type="number"
+                                    <textarea
+                                        id="ingredients"
+                                        name="ingredients"
+                                        type="text"
                                         className="form-control"
-                                        placeholder="Sku*"
+                                        placeholder="Ingredientes*"
                                         required
 
                                     />
@@ -183,49 +203,29 @@ export default function CreateProduct() {
                             </div>
                             <div className="form-group col-md-12 mb-0">
 
-                                <label className="small text-secondary" htmlFor="Nombre">Descripcion</label>
+                                <label className="small text-secondary" htmlFor="Nombre">Preparacion</label>
 
                                 <div className=" mb-3">
 
 
                                     <textarea
-                                        id="description"
-                                        name="description"
+                                        id="preparation"
+                                        name="preparation"
                                         type="text"
                                         className="form-control"
-                                        placeholder="Descripcion*"
+                                        placeholder="Preparacion*"
                                         rows="3"
                                         required
 
                                     />
 
 
-                                    <div className="invalid-feedback invalid-description"></div>
+                                    <div className="invalid-feedback invalid-preparation"></div>
 
                                 </div>
 
                             </div>
-                            <div className="form-group col-md-12 mb-0 ">
 
-                                <label className="small text-secondary" htmlFor="Cantidad">Cantidad</label>
-
-                                <div className="input mb-3">
-
-                                    <input
-                                        id="stock"
-                                        name="stock"
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="Cantidad*"
-                                        required
-
-                                    />
-
-                                    <div className="invalid-feedback invalid-stock"></div>
-
-                                </div>
-
-                            </div>
                             <div className="form-group col-md-12 mb-0">
 
                                 <label className="small text-secondary" htmlFor="image">Imagen</label>
@@ -233,7 +233,7 @@ export default function CreateProduct() {
                                 <div className="input mb-3">
 
                                     <input
-                                        type="text"
+                                        type="file"
                                         name="image"
                                         id="image"
                                         className="form-control-file border"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import logo from '../../img/Anuncio DarkCode.jpg';
-
+import image from '../../img/default.png';
+import Register from '../register/CreateUser';
 import $ from "jquery";
 
 
@@ -38,21 +38,18 @@ export default function Login() {
             { minHeight: "512.391px" }} >
 
             <div className="login-box" >
-
-         
-
                 <div className="login-card-body" >
-                <div className="login-logo mt-n5 mb-5 " >
+                    <div className="login-logo mt-n5 mb-5 " >
 
-<img className="mx-auto rounded-circle position-relative mt-n5" src={logo} alt="" width="120" height="120" />
+                        <img className="mx-auto rounded-circle position-relative mt-n5" src={image} alt="" width="120" height="120" />
 
-</div>
-                   
+                    </div>
+
 
                     <div className="card-body login-card-body mb-4" >
-                        
 
-                        <form>
+
+                        <form className="mb-3">
 
                             <div className="input-group mb-3  " >
 
@@ -84,21 +81,22 @@ export default function Login() {
 
                             </div>
 
-                            <button type="submit"
-                                className="btn btn-primary btn-block">Ingresar </button>
+                            <button type="submit" className="btn btn-primary btn-block">Ingresar </button>
+                            
+                            </form>
+                           
+                            <button className="btn btn-success btn-block" data-toggle="modal" data-target="#registerUser">Registrarme </button>
 
-                        </form>
-
+                            
+                            
                     </div>
 
                 </div>
-
             </div>
-
+            <Register/>
         </div>
 
     )
-
 }
 
-// Peticion post login
+

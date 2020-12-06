@@ -4,30 +4,29 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-responsive';
 import { db } from '../../../config/Firebase';
-import CreateCustomer from './CreateCustomer';
-import EditAndDeleteCustomer from './EditAndDeleteCustomer';
+import CreateProduct from './CreateRecipe';
+import EditAndDeleteProduct from './EditAndDeleteRecipe';
 
-
-export default function Customers() {
-	const customersData = async () => {
+export default function Recipes() {
+	const recipesData = async () => {
 		//creamos el dataset
-		const getCustomers = await db.collection('Customers').get();
+		const getRecipes = await db.collection('Recipes').get();
 		
 
 		const Data = [];
-		getCustomers.forEach((customer) => {
-			Data.push({...customer.data(), id:customer.id});
+		getRecipes.forEach((recipe) => {
+			Data.push({...recipe.data(), id:recipe.id});
 
 		})
 		const dataSet=[]
-		Data.forEach((customer,index)=>{
-			dataSet[index]=[(index+1),customer.name, customer.lastname,customer.email,customer.bussines, customer.phone,
-				[customer.id,customer.name, customer.lastname,customer.email,customer.bussines, customer.phone]]
+		Data.forEach((recipe,index)=>{
+			dataSet[index]=[(index+1),recipe.image,recipe.name, recipe.category,recipe.ingredients,recipe.preparation,
+				[recipe.id,recipe.name, recipe.category,recipe.ingredients,recipe.preparation,recipe.image]]
 			
 		
 		})
-    	
-		
+				
+		console.log(dataSet);
 		//SE ejecuta dataTable
 		$(document).ready(function () {
 			$('.table').DataTable({
@@ -35,11 +34,19 @@ export default function Customers() {
 				data: dataSet,
 				columns: [
 					{ title: "#" },
+					{
+						title: "Receta",
+						render: function(data){
+
+							return `<img src="${data}" style="width:120px">`
+					
+						}
+					},
 					{ title: "Nombre" },
-					{ title: "Apellidos" },
-					{ title: "Email" },
-					{ title: "Empresa" },
-					{ title: "Telefono" },
+					{ title: "Categoria" },
+					{ title: "Ingredientes" },
+					{ title: "Preparacion" },
+					
 					{
 						title: "Editar/Eliminar",
 						render: function (data) {
@@ -47,7 +54,7 @@ export default function Customers() {
 
 							return `
 					  
-							<a href="" class="editInputs" data-toggle="modal" data-target="#editCustomer" data='${data}'>
+							<a href="" class="editInputs" data-toggle="modal" data-target="#editRecipe" data='${data}'>
 
 							<button type="button" class="btn btn-primary btn-sm">Editar</button>
 	  
@@ -95,7 +102,7 @@ export default function Customers() {
 
 
 	}
-	customersData();
+	recipesData();
 
 	//SE RETORNA VISTA DEL COMPONENTE
 	return (
@@ -110,7 +117,7 @@ export default function Customers() {
 
 						<div className="col-sm-6">
 
-							<h1 className="m-0 text-dark">Clientes</h1>
+							<h1 className="m-0 text-dark">Recetas</h1>
 
 						</div>
 
@@ -134,7 +141,7 @@ export default function Customers() {
 
 									<h5 className="m-0">
 
-										<button className="btn btn-primary" data-toggle="modal" data-target="#createCustomer">Nuevo Cliente</button>
+										<button className="btn btn-primary" data-toggle="modal" data-target="#createRecipe">Nueva Receta</button>
 
 									</h5>
 
@@ -160,10 +167,10 @@ export default function Customers() {
 				</div>
 
 			</div>
-        <CreateCustomer/>
-        <EditAndDeleteCustomer/>
 
 
+<CreateProduct/>
+<EditAndDeleteProduct/>
 
 		</div>
 
@@ -171,4 +178,4 @@ export default function Customers() {
 
 }
 
-// getcustomers
+// getProducts

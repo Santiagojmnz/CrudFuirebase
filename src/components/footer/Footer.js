@@ -1,16 +1,14 @@
 import React from 'react';
 
-export default function Footer(){
+export default function Footer() {
 
-	return(
+	return (
 
-		<footer className="main-footer">
+		<footer className="card-footer text-muted">
 
-			
-
-			<center><strong className="text-aling center">
+			<center>
 				Copyright © 2020
-			</strong></center>
+			</center>
 
 		</footer>
 
