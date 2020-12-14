@@ -11,46 +11,46 @@ export default function Recipes() {
 	const recipesData = async () => {
 		//creamos el dataset
 		const getRecipes = await db.collection('Recipes').get();
-		
+
 
 		const Data = [];
 		getRecipes.forEach((recipe) => {
-			Data.push({...recipe.data(), id:recipe.id});
+			Data.push({ ...recipe.data(), id: recipe.id });
 
 		})
-		const dataSet=[]
-		Data.forEach((recipe,index)=>{
-			dataSet[index]=[(index+1),recipe.image,recipe.name, recipe.category,recipe.ingredients,recipe.preparation,
-				[recipe.id,recipe.name, recipe.category,recipe.ingredients,recipe.preparation,recipe.image]]
-			
-		
+		const dataSet = []
+		Data.forEach((recipe, index) => {
+			dataSet[index] = [(index + 1), recipe.image, recipe.name, recipe.category, recipe.ingredients, recipe.preparation,
+			[recipe.id, recipe.name, recipe.category, recipe.ingredients, recipe.preparation, recipe.image]]
+
+
 		})
-				
+
 		console.log(dataSet);
 		//SE ejecuta dataTable
 		$(document).ready(function () {
 			$('.table').DataTable({
-				
+				retrieve: true,
 				data: dataSet,
 				columns: [
 					{ title: "#" },
 					{
 						title: "Receta",
-						render: function(data){
+						render: function (data) {
 
 							return `<img src="${data}" style="width:120px">`
-					
+
 						}
 					},
 					{ title: "Nombre" },
 					{ title: "Categoria" },
 					{ title: "Ingredientes" },
 					{ title: "Preparacion" },
-					
+
 					{
 						title: "Editar/Eliminar",
 						render: function (data) {
-							
+
 
 							return `
 					  
@@ -149,7 +149,7 @@ export default function Recipes() {
 
 								<div className="card-body">
 
-									<table className="table table-striped dt-responsive" style={{ "width": "100%" }}>
+									<table className="table table-striped text-truncate dt-responsive" style={{ "width": "100%" }}>
 
 
 
@@ -169,8 +169,8 @@ export default function Recipes() {
 			</div>
 
 
-<CreateProduct/>
-<EditAndDeleteProduct/>
+			<CreateProduct />
+			<EditAndDeleteProduct />
 
 		</div>
 

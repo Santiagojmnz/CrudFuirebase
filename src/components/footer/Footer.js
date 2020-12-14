@@ -4,11 +4,11 @@ export default function Footer() {
 
 	return (
 
-		<footer className="card-footer text-muted">
+		<footer className="card-footer text-muted ">
 
-			<center>
-				Copyright © 2020
-			</center>
+			<center>Copyright © 2020</center>
+				
+			
 
 		</footer>
 

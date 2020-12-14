@@ -117,7 +117,7 @@ export default function EditAndDeleteRecipe() {
         db.collection('Recipes').doc(id).set(recipe);
         $('button[type="submit"]').remove();
 
-        setTimeout(() => { window.location.href = "/"; }, 1000)
+        setTimeout(() => { window.location.href = "/Recetas"; }, 1000)
 
 
 
@@ -147,6 +147,7 @@ export default function EditAndDeleteRecipe() {
 
         e.preventDefault();
         const data = $(this).attr("data").split(',');
+        console.log(data+"Data recipes");
 
         //Confirmar accion
 
@@ -177,7 +178,7 @@ export default function EditAndDeleteRecipe() {
 
                             if (result.value) {
 
-                                window.location.href = "/";
+                                window.location.href = "/Recetas";
 
                             }
 
@@ -195,7 +196,7 @@ export default function EditAndDeleteRecipe() {
 
                             if (result.value) {
 
-                                window.location.href = "/";
+                                window.location.href = "/Recetas";
 
                             }
 

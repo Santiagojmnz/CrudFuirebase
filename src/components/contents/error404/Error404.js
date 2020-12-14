@@ -4,7 +4,7 @@ export default function Error404(){
 
 	return(
 
-		<div className="content" style={{minHeight: "1589.56px"}}>
+		<div className="content" style={{minHeight: "300.56px"}}>
 
 			<section className="content">
 
