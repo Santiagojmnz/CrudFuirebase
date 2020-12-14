@@ -1,9 +1,10 @@
 import React from 'react';
-import $ from 'jquery';
+import $, { data } from 'jquery';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-responsive';
 import { db } from '../../../config/Firebase';
+import EditAndDeleteUser from './EditAndDeleteUser';
 
 
 
@@ -17,12 +18,11 @@ export default function Users() {
 		const Data = [];
 		getUsers.forEach((user) => {
 			Data.push({...user.data(), id:user.id});
-
+		
 		})
-
 		const dataSet = [];
 		Data.forEach((user, index) => {
-			dataSet[index] = [(index + 1), user.name, user.surname, user.email, [user.name, user.surname, user.email, user._id]]
+			dataSet[index] = [(index + 1), user.name, user.surname, user.email, [user.name, user.surname, user.email, user.id]]
 
 		})
 		//SE ejecuta dataTable
@@ -32,6 +32,7 @@ export default function Users() {
 
 		$(document).ready(function () {
 			$('.table').DataTable({
+				retrieve: true,
 				data: dataSet,
 				columns: [
 					{ title: "#" },
@@ -148,11 +149,11 @@ export default function Users() {
 
 			</div>
 
-		
+	<EditAndDeleteUser/>
 
 		</div>
 
-	)
+	);
 
 }
 // getUsers

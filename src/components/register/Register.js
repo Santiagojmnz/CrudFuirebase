@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import $ from 'jquery';
 import { db, auth } from '../../config/Firebase';
+import { ResponsiveEmbed } from 'react-bootstrap';
 
 
 export default function CreateUser() {
 
     //Captura de datos
-const [error,setError] = useState();
+
     const [user, createUser] = useState({
 
         name: "",
         surname: "",
         email: "",
         password: "",
-        id: ""
-
+        rol: "user",
+        image: "",
     })
 
     //onChange
@@ -31,13 +32,13 @@ const [error,setError] = useState();
 
     //Onsubmit
 
-    const submitPost = async e => {
+    const handleSubmit = async e => {
 
         $('.alert').remove();
 
         e.preventDefault();
 
-        const { name, surname, email, password } = user;
+        const { name, surname,rol, email, password } = user;
 
 
         //Validacion de campos vacios
@@ -98,33 +99,29 @@ const [error,setError] = useState();
 
         }
 
-      
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(function (user) {
-                
-               
-                console.log('Usuario registrado');
+
+        auth.createUserWithEmailAndPassword(user.email, user.password)
+            .then(response => {
+                delete user.password;
+                db.collection('Users').doc(response.user.uid).set(user);
+                $(".modal-footer").before(`<div class="alert alert-success">Usuario registrado</div>`);
+                setTimeout(() => { window.location.href = "/Usuarios"; }, 1000)
+
             })
             .catch(function (error) {
-                // Handle Errors here.
-                var error =error.code;
-          
+                var error = error.code;
+                console.log(error)
+                if (error === 'auth/email-already-in-use') {
+                    $(".modal-footer").before(`<div class="alert alert-danger">Correo electrónico en uso</div>`);
+                } else {
+                    $(".modal-footer").before(`<div class="alert alert-danger">Error al procesar la peticion</div>`);
+
+                }
+
+
+
             });
 
-            if(error==400){
-                $(".modal-footer").before(`<div class="alert alert-success">Usuario existente</div>`)
-            }else{
-                $('button[type="submit"]').remove();
-                db.collection('Users').doc().set(user);
-                $(".modal-footer").before(`<div class="alert alert-success">Usuario registrado</div>`)
-        
-        
-            }
-
-       
-        //setTimeout(() => { window.location.href = "/"; }, 1000)
-
-        // }
 
     }
 
@@ -137,12 +134,12 @@ const [error,setError] = useState();
                 <div className="modal-content">
 
                     <div className="modal-header">
-                        <h4 className="modal-title">Crear cuenta</h4>
+                        <h4 className="modal-title text-dark">Crear cuenta</h4>
                         <button type="button" className="close" data-dismiss="modal">&times;</button>
                     </div>
 
 
-                    <form onChange={handleChange} onSubmit={submitPost}>
+                    <form onChange={handleChange} onSubmit={handleSubmit}>
 
                         <div className="modal-body">
 

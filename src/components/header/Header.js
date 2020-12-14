@@ -7,7 +7,8 @@ export default function Header() {
 
 
 	return (
-			<div className="imageBg container-row " >
+
+			<div className="container-fluid imageBg " >
 
 				<div className="row ml-5">
 					<div className="ml-5 mt-4">
@@ -23,6 +24,7 @@ export default function Header() {
 					</div>
 				</div>
 			</div>
+		
 	);
 
 

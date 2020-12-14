@@ -4,18 +4,20 @@ import $ from 'jquery';
 import { db, storage } from '../../../config/Firebase';
 
 export default function CreateRecipe() {
+    const id=localStorage.getItem("ID");
+    const user=localStorage.getItem("NAME");
+    const date=new Date();
 
-    //Hoks para capturar datos
-    const [url, setUrl] = useState();
-
-    const [recipe, createRecipe] = useState({
+       const [recipe, createRecipe] = useState({
 
         name: "",
         category: "",
         ingredients: "",
         preparation: "",
         image: "",
-        id: ""
+        id:"",
+        user:"",
+        fecha:"",
 
     });
 
@@ -50,7 +52,10 @@ export default function CreateRecipe() {
                 'category': $("#category").val(),
                 'ingredients': $("#ingredients").val(),
                 'preparation': $("#preparation").val(),
-                'image':url
+                'image':url,
+                'user': user,
+                'id': id,
+                'fecha':date
 
 
             })
@@ -67,7 +72,7 @@ export default function CreateRecipe() {
 
         e.preventDefault();
 
-        const { name, category, ingredients, preparation, image} = recipe;
+        const { name, category, ingredients, preparation, image,id,user,fecha} = recipe;
 
 
         //Validar campos 
@@ -112,7 +117,7 @@ export default function CreateRecipe() {
 
         $('button[type="submit"]').remove();
 
-        setTimeout(() => { window.location.href = "/"; }, 1000)
+        setTimeout(() => { window.location.href = "/Recetas"; }, 1000)
     }
 
 

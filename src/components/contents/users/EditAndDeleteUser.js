@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import $ from 'jquery';
-import { rutaAPI } from '../../../config/Config';
+import { db,auth } from '../../../config/Firebase';
 import Swal from 'sweetalert2';
+
 
 export default function EditAndDeleteUser() {
 
     //Captura de datos
-
+const [id,setId]=useState();
     const [user, updateUser] = useState({
 
         name: "",
@@ -87,37 +88,30 @@ export default function EditAndDeleteUser() {
             }
 
         }
+        $(".modal-footer").before(`<div class="alert alert-success">usuario actualizado</div>`)
+        if(user.password){
+             delete user.password;
+            db.collection('Users').doc(id).set(user);
+        }else{
+            delete user.password;
+            db.collection('Users').doc(id).set(user);
+        }
+        $('button[type="submit"]').remove();
+
+        setTimeout(() => { window.location.href = "/Usuarios"; }, 1000)
+      
 
 
 
 
 
+        
 
-        //Solicitud post
-
-        const result = await putData(user);
-
-        if (result.status !== 200) {
-
-            $(".modal-footer").before(`<div class="alert alert-danger">${result.message}</div>`)
+           
 
         }
 
-        if (result.status === 200) {
-
-            $(".modal-footer").before(`<div class="alert alert-success">${result.message}</div>`)
-
-            $('button[type="submit"]').remove();
-
-            setTimeout(() => { window.location.href = "/usuarios"; }, 1000)
-            return;
-
-        }
-
-    }
-
-    //Retornar vista
-
+    
 
     //Se capturan datos para editar
     $(document).on("click", ".editInputs", function (e) {
@@ -126,6 +120,7 @@ export default function EditAndDeleteUser() {
 
         var data = $(this).attr("data").split(',');
         console.log(data);
+        setId(data[3]);
 
         $("#editName").val(data[0]);
         $("#editSurname").val(data[1]);
@@ -148,7 +143,7 @@ export default function EditAndDeleteUser() {
 
         e.preventDefault();
 
-        var data = $(this).attr("data").split(',')[3];
+        const data = $(this).attr("data").split(',');
         //Confirmar accion
 
         Swal.fire({
@@ -159,57 +154,54 @@ export default function EditAndDeleteUser() {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Eliminar'
         }).then((result) => {
-            if (result.value) {
+            if (result.value){  
+                const userDelete = async () => {
+                    console.log(data);
+                    db.collection('Users').doc(data[3]).delete();
 
-                //servicio Delete
-                const UserDelete = async () => {
-                    const result = await deleteData(data);
-                   
-
-                    if (result.status===200) {
+                    if (data) {
 
                         Swal.fire({
-                            type:"success",
-                            title: result.message,
+                            type: "success",
+                            title: "El usuario ha sido eliminado",
                             showConfirmButton: true,
                             confirmButtonText: "Cerrar"
-                                
-                        }).then(function(result){
-    
-                             if(result.value){
-    
-                                 window.location.href= "/usuarios";
-    
-                             }
-    
+
+                        }).then(function (result) {
+
+                            if (result.value) {
+
+                                window.location.href = "/Usuarios";
+
+                            }
+
                         })
-      
+
                     }
-                    if (result.status !==200) {
+                    if (!data) {
                         Swal.fire({
-                            type:"error",
-                            title: result.message,
+                            type: "error",
+                            title: "Receta no encontrada",
                             showConfirmButton: true,
                             confirmButtonText: "Cerrar"
-                                
-                        }).then(function(result){
-    
-                             if(result.value){
-    
-                                 window.location.href= "/usuarios";
-    
-                             }
-    
+
+                        }).then(function (result) {
+
+                            if (result.value) {
+
+                                window.location.href = "/Usuarios";
+
+                            }
+
                         })
 
-                          }
+                    }
 
 
 
                 }
-                UserDelete();
-
-            }
+                userDelete();
+                }
 
         })
 
@@ -346,72 +338,6 @@ export default function EditAndDeleteUser() {
             </div>
         </div>
 
-    )
-
-}
-
-//Peticion Update
-const putData = data => {
-
-    const url = `${rutaAPI}/update-user/${data._id}`;
-    const token = localStorage.getItem("TOKEN");
-    const params = {
-
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-
-            "Authorization": token,
-            "Content-Type": "application/json"
-        }
-
-    }
-
-    return fetch(url, params).then(response => {
-
-
-        return response.json();
-
-    }).then(result => {
-
-        return result;
-
-    }).catch(err => {
-
-        return err;
-
-    })
-
-}
-//Peticion Delete
-const deleteData = data => {
-
-    const url = `${rutaAPI}/delete-user/${data}`;
-    const token = localStorage.getItem("TOKEN");
-    const params = {
-
-        method: "DELETE",
-        headers: {
-
-            "Authorization": token,
-            "Content-Type": "application/json"
-        }
-
-    }
-
-    return fetch(url, params).then(response => {
-
-
-        return response.json();
-
-    }).then(result => {
-
-        return result;
-
-    }).catch(err => {
-
-        return err;
-
-    })
+    );
 
 }
